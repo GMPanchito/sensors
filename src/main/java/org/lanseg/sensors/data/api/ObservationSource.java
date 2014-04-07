@@ -1,6 +1,7 @@
-package org.lanseg.sensors.data;
+package org.lanseg.sensors.data.api;
 
 import java.util.List;
+import org.lanseg.sensors.data.Observation;
 
 /**
  *

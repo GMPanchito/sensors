@@ -1,5 +1,6 @@
-package org.lanseg.sensors.data;
+package org.lanseg.sensors.data.impl;
 
+import org.lanseg.sensors.data.api.ObservationSource;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -16,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import org.lanseg.sensors.data.Observation;
 
 /**
  *
@@ -29,25 +31,32 @@ public class FileObservationSource implements ObservationSource {
     private static final int DEFAULT_RECORD_COUNT = 365 * 24 * 60;
     private static final int ROUND_RANGE = 10000;
 
-    private final String filename;
-    private final RandomAccessFile file;
+    private String filename;
+    private RandomAccessFile file;
     private long minTime = 0;
     private long maxTime = 0;
 
+    public FileObservationSource() {}
+    
     public FileObservationSource(String filename) throws IOException {
         this.filename = filename;
         File sourceFile = new File(filename);
         boolean firstTimeWrite = !sourceFile.exists();
-        file = new RandomAccessFile(sourceFile, "rw");
+        file = new RandomAccessFile(sourceFile, "rw");        
         if (firstTimeWrite) {
-            file.setLength(METADATA_SIZE + DEFAULT_RECORD_COUNT * RECORD_SIZE);
-            for (long i = 0; i < file.length(); i++) {
-                file.write(0xFF);
-            }
-            file.seek(0);
-            file.writeLong(System.currentTimeMillis());
-            file.writeLong(System.currentTimeMillis());
+            createFile(DEFAULT_RECORD_COUNT);
+        }        
+    }
+
+    private void createFile(int recordCount) throws IOException {
+        file.setLength(METADATA_SIZE + DEFAULT_RECORD_COUNT * RECORD_SIZE);
+        for (long i = 0; i < file.length(); i++) {
+            file.write(0xFF);
         }
+        file.seek(0);
+        file.writeLong(System.currentTimeMillis());
+        file.writeLong(System.currentTimeMillis());
+
         file.seek(0);
         minTime = file.readLong();
         maxTime = file.readLong();
@@ -66,7 +75,7 @@ public class FileObservationSource implements ObservationSource {
         }
         return 0;
     }
-    
+
     @Override
     public long getMinTime() {
         return minTime;
