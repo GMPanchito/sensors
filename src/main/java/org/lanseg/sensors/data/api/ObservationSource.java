@@ -14,5 +14,6 @@ public interface ObservationSource {
     
     public List<Observation> getObservations(long fromTime, long toTime);
     public void putObservations(List<Observation> data);
+    public void putObservation(Observation data);
     
 }

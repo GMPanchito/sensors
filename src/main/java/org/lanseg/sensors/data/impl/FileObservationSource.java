@@ -36,16 +36,20 @@ public class FileObservationSource implements ObservationSource {
     private long minTime = 0;
     private long maxTime = 0;
 
-    public FileObservationSource() {}
-    
+    public FileObservationSource() {
+    }
+
     public FileObservationSource(String filename) throws IOException {
         this.filename = filename;
         File sourceFile = new File(filename);
         boolean firstTimeWrite = !sourceFile.exists();
-        file = new RandomAccessFile(sourceFile, "rw");        
+        file = new RandomAccessFile(sourceFile, "rw");
         if (firstTimeWrite) {
             createFile(DEFAULT_RECORD_COUNT);
-        }        
+        }
+        file.seek(0);
+        minTime = file.readLong();
+        maxTime = file.readLong();
     }
 
     private void createFile(int recordCount) throws IOException {
@@ -56,10 +60,6 @@ public class FileObservationSource implements ObservationSource {
         file.seek(0);
         file.writeLong(System.currentTimeMillis());
         file.writeLong(System.currentTimeMillis());
-
-        file.seek(0);
-        minTime = file.readLong();
-        maxTime = file.readLong();
     }
 
     private void setMaxTime(long maxTime) throws IOException {
@@ -88,8 +88,14 @@ public class FileObservationSource implements ObservationSource {
 
     @Override
     public List<Observation> getObservations(long fromTime, long toTime) {
-        if (minTime == 0) {
+        if (minTime == 0 || toTime < fromTime) {
             return Collections.EMPTY_LIST;
+        }
+        if (fromTime < minTime) {
+            fromTime = minTime;
+        }
+        if (toTime > maxTime) {
+            toTime = maxTime;
         }
         long startPos = RECORD_SIZE * (fromTime - minTime) / 1000 + METADATA_SIZE;
         long endPos = RECORD_SIZE * (toTime - minTime) / 1000 + METADATA_SIZE;
@@ -114,67 +120,42 @@ public class FileObservationSource implements ObservationSource {
         return result;
     }
 
-    public Stream<Observation> getObservationStream() {
-        return StreamSupport.stream(new Spliterator<Observation>() {
+    public String getFilename() {
+        return filename;
+    }
 
-            private long currentPosition = METADATA_SIZE;
-
-            @Override
-            public boolean tryAdvance(Consumer<? super Observation> action) {
-                if (currentPosition < maxTime) {
-                    try {
-                        byte value[] = new byte[RECORD_SIZE];
-                        file.seek(currentPosition);
-                        file.read(value);
-                        int asInt = (value[3] & 0xFF)
-                                | ((value[2] & 0xFF) << 8)
-                                | ((value[1] & 0xFF) << 16)
-                                | ((value[0] & 0xFF) << 24);
-                        if (asInt != 0xFFFFFFFF) {
-                            action.accept(new Observation(currentPosition * 1000 + minTime,
-                                    (double) Math.round(ROUND_RANGE * Float.intBitsToFloat(asInt)) / ROUND_RANGE));
-                        }
-                        currentPosition += RECORD_SIZE;
-                    } catch (IOException ex) {
-                        Logger.getLogger(FileObservationSource.class.getName()).log(Level.SEVERE, null, ex);
-                        return false;
-                    }
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public Spliterator<Observation> trySplit() {
-                return null;
-            }
-
-            @Override
-            public long estimateSize() {
-                return maxTime - currentPosition * 1000 + minTime;
-            }
-
-            @Override
-            public int characteristics() {
-                return ORDERED | SIZED | IMMUTABLE | SUBSIZED;
-            }
-        }, false);
+    public void setFilename(String filename) {
+        this.filename = filename;
     }
 
     @Override
     public void putObservations(List<Observation> data) {
         try {
             for (Observation record : data) {
-                long pos = (record.getTime() - minTime) / 1000 + METADATA_SIZE;
-                file.seek(pos);
-                file.writeFloat((float) record.getValue());
-                if (record.getTime() > maxTime) {
-                    maxTime = record.getTime();
-                }
+                addRecord(record);
             }
             setMaxTime(maxTime);
         } catch (IOException ex) {
             LOG.log(Level.SEVERE, "Error writing data: {0}", ex);
+        }
+    }
+
+    @Override
+    public void putObservation(Observation record) {
+        try {
+            addRecord(record);
+            setMaxTime(maxTime);
+        } catch (IOException ex) {
+            LOG.log(Level.SEVERE, "Error writing data: {0}", ex);
+        }
+    }
+
+    private void addRecord(Observation record) throws IOException {
+        long pos = (record.getTime() - minTime) / 1000 + METADATA_SIZE;
+        file.seek(pos);
+        file.writeFloat(Double.valueOf(record.getValue()).floatValue());
+        if (record.getTime() > maxTime) {
+            maxTime = record.getTime();
         }
     }
 

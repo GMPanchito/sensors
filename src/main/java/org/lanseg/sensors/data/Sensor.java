@@ -1,23 +1,31 @@
 package org.lanseg.sensors.data;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import org.codehaus.jackson.annotate.JsonTypeInfo;
+import org.codehaus.jackson.map.annotate.JsonDeserialize;
 
 /**
  *
  * @author lans
  */
 public class Sensor {
-    
-    private String id;
-    private List<Feature> features;
 
-    public Sensor(){}
-    
-    public Sensor(String id, List<Feature> features) {
-        this.id = id;
-        this.features = features;
+    private String id;
+
+    @JsonDeserialize(as = HashMap.class)
+    private final Map<String, Feature> features = new HashMap<>();
+
+    public Sensor() {
     }
-            
+
+    public Sensor(String id) {
+        this.id = id;
+    }
+
     public String getId() {
         return id;
     }
@@ -26,11 +34,23 @@ public class Sensor {
         this.id = id;
     }
 
-    public List<Feature> getFeatures() {
-        return features;
+    public Map<String, Feature> getFeatures() {
+        return Collections.unmodifiableMap(features);
     }
 
     public void setFeatures(List<Feature> features) {
-        this.features = features;
+        this.features.clear();
+        features.stream().forEach((f) -> {
+            this.features.put(f.getId(), f);
+        });
+    }
+
+    public void addData(String featureId, long time, double value) {
+        features.get(featureId).getSource().putObservation(new Observation(time, value));
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Sensor {id: %s, features: %d} ", id, features.size());
     }
 }

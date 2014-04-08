@@ -34,7 +34,7 @@ public class Observation {
     
     @Override
     public String toString() {
-        return time + ": " + value;
+        return new Date(time) + ": " + value;
     }
     
 }
