@@ -1,13 +1,9 @@
 package org.lanseg.sensors.data;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.codehaus.jackson.annotate.JsonTypeInfo;
-import org.codehaus.jackson.map.annotate.JsonDeserialize;
-
 /**
  *
  * @author lans
@@ -16,7 +12,6 @@ public class Sensor {
 
     private String id;
 
-    @JsonDeserialize(as = HashMap.class)
     private final Map<String, Feature> features = new HashMap<>();
 
     public Sensor() {

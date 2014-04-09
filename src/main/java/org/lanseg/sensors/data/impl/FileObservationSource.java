@@ -1,22 +1,14 @@
 package org.lanseg.sensors.data.impl;
 
 import org.lanseg.sensors.data.api.ObservationSource;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 import org.lanseg.sensors.data.Observation;
 
 /**
@@ -53,7 +45,7 @@ public class FileObservationSource implements ObservationSource {
     }
 
     private void createFile(int recordCount) throws IOException {
-        file.setLength(METADATA_SIZE + DEFAULT_RECORD_COUNT * RECORD_SIZE);
+        file.setLength(METADATA_SIZE + recordCount * RECORD_SIZE);
         for (long i = 0; i < file.length(); i++) {
             file.write(0xFF);
         }
@@ -68,9 +60,9 @@ public class FileObservationSource implements ObservationSource {
     }
 
     public long roundTime(long time) {
-        if (time < minTime) {
+        if (time <= minTime) {
             return minTime;
-        } else if (time > maxTime) {
+        } else if (time >= maxTime) {
             return maxTime;
         }
         return 0;
@@ -150,8 +142,13 @@ public class FileObservationSource implements ObservationSource {
         }
     }
 
+    private long getLocation(long time) {
+        return ((time - minTime) / 1000 / RECORD_SIZE) * RECORD_SIZE + METADATA_SIZE;
+    }
+
     private void addRecord(Observation record) throws IOException {
-        long pos = (record.getTime() - minTime) / 1000 + METADATA_SIZE;
+        LOG.log(Level.INFO, "Added observation: {0}", record);
+        long pos = getLocation(record.getTime());
         file.seek(pos);
         file.writeFloat(Double.valueOf(record.getValue()).floatValue());
         if (record.getTime() > maxTime) {

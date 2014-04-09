@@ -49,7 +49,10 @@ public class FileSensorDataStorage implements SensorDataStorage {
 
     @Override
     public Sensor createSensor(String id, List<Feature> features) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Sensor s = new Sensor(id);
+        s.setFeatures(features);
+        sensors.put(id, s);
+        return s;
     }
 
 }
