@@ -1,0 +1,1 @@
+{"sensors":[{"id":"sensor - 1","features":{"Temp - 1":{"id":"Temp - 1","type":"TEMPERATURE","source":{"filename":"root//s1f1","minTime":1397049656655,"maxTime":1397049656655}},"Humd - 1":{"id":"Humd - 1","type":"HUMIDITY","source":{"filename":"root//s1f2","minTime":1397049661152,"maxTime":1397049661152}}}}],"root":"/home/lans/devel/sensors/root"}

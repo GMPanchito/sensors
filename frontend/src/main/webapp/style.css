@@ -1,0 +1,49 @@
+.root {
+    margin-top:16px;
+}
+
+.row {
+    background-color:#cdefff;
+}
+
+.timers .row * {
+    font-family: monospace;
+    font-size: 18px;
+}
+.row .left {
+    text-align: left;
+    padding-left: 100px;
+    z-index:1;
+}
+
+.row .right {
+    text-align:left;
+    padding-left: 100px;
+    z-index:1;
+}
+
+.map {
+    height: 800px;
+}
+
+.project_content {
+}
+
+.map_controls .control {
+    width: 100%;
+}
+
+.map_controls .input-group {
+    margin-bottom:16px;
+}
+
+.post {
+    border-bottom: dotted 1px silver;
+    margin-bottom: 8px;
+    overflow-x: hidden;
+}
+
+.posts {
+    height: 600px;
+    overflow-y:auto;
+}
