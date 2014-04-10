@@ -42,11 +42,6 @@
 	    <version>4.11</version>
         </dependency>
         <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>jsr311-api</artifactId>
-            <version>1.1.1</version>
-        </dependency>
-        <dependency>
             <groupId>org.apache.cxf</groupId>
             <artifactId>cxf-bundle-jaxrs</artifactId>
             <version>2.7.10</version>
@@ -56,6 +51,12 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.3.3</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
+            <groupId>org.lanseg.sensors</groupId>
+            <artifactId>sensors-backend</artifactId>
+            <version>0.1-SNAPSHOT</version>
             <type>jar</type>
         </dependency>
         <dependency>

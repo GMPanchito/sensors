@@ -1,7 +1,9 @@
 package org.lanseg.sensors;
 
 import java.io.IOException;
+import org.lanseg.sensors.data.api.ObservationSource;
 import org.lanseg.sensors.data.api.SensorDataStorage;
+import org.lanseg.sensors.data.impl.DemoSensorStorage;
 import org.lanseg.sensors.utils.Utils;
 
 /**
@@ -36,14 +38,16 @@ public class Main {
         
          (new ObjectMapper()).writeValue(new File("data"), sensorSource);*/
 
-        SensorDataStorage sensors = Utils.getStorage("data");
-        System.out.println(sensors);
+        SensorDataStorage sensors = new DemoSensorStorage(12, 3);
         sensors.getSensors().forEach((s) -> {
-            s.getFeatures().get("Temp - 1").getSource().getObservations(0, System.currentTimeMillis() * 10).forEach(
-                    (o) -> System.out.println("Temperature: " + o));
-            s.getFeatures().get("Humd - 1").getSource().getObservations(0, System.currentTimeMillis() * 10).forEach(
-                    (o) -> System.out.println("Humidity: " + o)
-            );
+            System.out.println("Sensor " + s);
+            s.getFeatures().entrySet().forEach((e) -> {
+                System.out.println("\tFeature " + e.getValue().getType());
+                ObservationSource src = e.getValue().getSource();
+                src.getObservations(0, src.getMaxTime()).forEach((o) -> {
+                    System.out.println("\t\t" + o.getValue());
+                });
+            });
         });
         /*
          ObjectMapper m = new ObjectMapper();
