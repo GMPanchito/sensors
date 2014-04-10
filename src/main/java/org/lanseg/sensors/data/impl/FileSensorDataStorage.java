@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.lanseg.sensors.data.Feature;
 import org.lanseg.sensors.data.Sensor;
 import org.lanseg.sensors.data.api.SensorDataStorage;
 
@@ -15,18 +14,25 @@ import org.lanseg.sensors.data.api.SensorDataStorage;
  */
 public class FileSensorDataStorage implements SensorDataStorage {
 
-    private final Map<String, Sensor> sensors;
-    private final File root;
+    private final Map<String, Sensor> sensors = new HashMap<>();;
+    private File root;
+
+    public FileSensorDataStorage() {
+
+    }
 
     public FileSensorDataStorage(String rootFolder) {
         root = new File(rootFolder);
+        initStorage();
+    }
+
+    private void initStorage() {
         if (root.exists() && !root.isDirectory()) {
-            throw new RuntimeException(rootFolder + " already exists and not a folder!");
+            throw new RuntimeException(root + " already exists and not a folder!");
         }
         if (!root.exists()) {
             root.mkdir();
         }
-        sensors = new HashMap<>();
     }
 
     @Override
@@ -46,12 +52,24 @@ public class FileSensorDataStorage implements SensorDataStorage {
         sensors.remove(id);
     }
 
-    @Override
-    public Sensor createSensor(String id, List<Feature> features) {
-        Sensor s = new Sensor(id);
-        s.setFeatures(features);
-        sensors.put(id, s);
-        return s;
+    public void setSensors(List<Sensor> sensors) {
+        this.sensors.clear();
+        sensors.stream().forEach((s) -> {
+            this.sensors.put(s.getId(), s);
+        });
     }
 
+    public File getRoot() {
+        return root;
+    }
+
+    public void setRoot(File root) {
+        this.root = root;
+        initStorage();
+    }
+    
+    @Override
+    public String toString(){
+        return String.format("Sensors {%s}", sensors);
+    }
 }
