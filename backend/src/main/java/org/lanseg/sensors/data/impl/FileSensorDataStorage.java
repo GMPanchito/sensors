@@ -41,7 +41,7 @@ public class FileSensorDataStorage implements SensorDataStorage {
     }
 
     @Override
-    public List<Sensor> getSensors() {
+    public List<Sensor> getAllSensors() {
         List<Sensor> result = new ArrayList<>();
         result.addAll(sensors.values());
         return result;
@@ -71,5 +71,10 @@ public class FileSensorDataStorage implements SensorDataStorage {
     @Override
     public String toString(){
         return String.format("Sensors {%s}", sensors);
+    }
+
+    @Override
+    public Sensor getSensor(String id) {
+        return sensors.get(id);
     }
 }

@@ -10,6 +10,7 @@ import org.lanseg.sensors.data.Sensor;
 public interface SensorDataStorage {
 
     public void addSensor(Sensor s);
-    public List<Sensor> getSensors();
+    public List<Sensor> getAllSensors();
+    public Sensor getSensor(String id);
     public void removeSensor(String id);
 }

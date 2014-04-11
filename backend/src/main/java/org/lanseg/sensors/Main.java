@@ -41,7 +41,7 @@ public class Main {
          (new ObjectMapper()).writeValue(new File("data"), sensorSource);*/
 
         SensorDataStorage sensors = new DemoSensorStorage(12, 3, GeoUtils.WORLD);
-        sensors.getSensors().forEach((s) -> {
+        sensors.getAllSensors().forEach((s) -> {
             System.out.println("Sensor " + s);
             s.getFeatures().entrySet().forEach((e) -> {
                 System.out.println("\tFeature " + e.getValue().getType());

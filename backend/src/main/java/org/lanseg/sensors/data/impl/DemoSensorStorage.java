@@ -1,6 +1,5 @@
 package org.lanseg.sensors.data.impl;
 
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -24,6 +23,9 @@ public class DemoSensorStorage implements SensorDataStorage {
     private final List<Sensor> sensors;
 
     public DemoSensorStorage(int count, int maxFeatures, Rectangle2D bounds) {
+        if (bounds == null) {
+            bounds = GeoUtils.WORLD;
+        }
         sensorsCount = count;
         sensors = new ArrayList<>();
         long start = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
@@ -54,12 +56,17 @@ public class DemoSensorStorage implements SensorDataStorage {
     }
 
     @Override
-    public List<Sensor> getSensors() {
+    public List<Sensor> getAllSensors() {
         return sensors;
     }
 
     @Override
     public void removeSensor(String id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Sensor getSensor(String id) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
