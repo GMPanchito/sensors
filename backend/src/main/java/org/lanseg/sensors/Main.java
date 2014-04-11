@@ -1,5 +1,6 @@
 package org.lanseg.sensors;
 
+import java.awt.geom.Point2D;
 import java.io.IOException;
 import org.lanseg.sensors.data.api.ObservationSource;
 import org.lanseg.sensors.data.api.SensorDataStorage;
@@ -48,11 +49,8 @@ public class Main {
                     System.out.println("\t\t" + o.getValue());
                 });
             });
-        });
-        /*
-         ObjectMapper m = new ObjectMapper();
-         SensorDataStorage sensorSource = m.readValue(new File("data"), FileSensorDataStorage.class);
-         System.out.println(sensorSource);*/
+        });     
+         System.out.println(Utils.MAPPER.writeValueAsString(new Point2D.Double(100, 100)));
 
     }
 }

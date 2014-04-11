@@ -11,7 +11,8 @@ import java.util.Map;
 public class Sensor {
 
     private String id;
-
+    private SensorDetails details;
+    
     private final Map<String, Feature> features = new HashMap<>();
 
     public Sensor() {
@@ -44,8 +45,16 @@ public class Sensor {
         features.get(featureId).getSource().putObservation(new Observation(time, value));
     }
 
+    public SensorDetails getDetails() {
+        return details;
+    }
+
+    public void setDetails(SensorDetails details) {
+        this.details = details;
+    }
+    
     @Override
     public String toString() {
-        return String.format("Sensor {id: %s, features: %d} ", id, features.size());
+        return String.format("Sensor {id: %s, features: %d, details: %s} ", id, features.size(), details);
     }
 }
