@@ -42,7 +42,7 @@ public class Sensor {
     }
 
     public void addData(String featureId, long time, double value) {
-        features.get(featureId).getSource().putObservation(new Observation(time, value));
+        features.get(featureId).getSource().addObservation(new Observation(time, value));
     }
 
     public SensorDetails getDetails() {

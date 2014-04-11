@@ -1,7 +1,7 @@
 /*
-sensor: id, location, features
-
-*/
+ sensor: id, location, features
+ 
+ */
 
 $(function() {
     fromProjection = new OpenLayers.Projection("EPSG:4326");   // Transform from WGS 1984
@@ -77,20 +77,20 @@ function getSensorData(params) {
     $.ajax({
         url: "/rest/sensors/list" /*+ params*/,
         success: function(data) {
-            alert(JSON.stringify(data));
             var counter = 0;
             for (var i = 0; i < data.length; i++) {
                 var sensor = data[i];
-                var point = sensor.details.location;
+                var details = data[i].details;
+                var point = details.location;
                 var lonlat = new OpenLayers.LonLat(point.lon, point.lat).transform(fromProjection, toProjection);
                 pt = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(lonlat.lon, lonlat.lat));
-                pt.attributes["text"] = getFeatureNames(sensor.features);
+                pt.attributes["text"] = details.title + "<br/>" + details.description;
                 pt.attributes["id"] = sensor.id;
                 pt.attributes["author"] = point.author;
                 pt.attributes["authorName"] = point.authorName;
                 pois.addFeatures([pt]);
                 if (counter++ < 100) {
-                    $("#posts").html($("#posts").html() + "<div class='post'>" + sensor.id + ":" + sensor.details.title + "</div>");
+                    $("#posts").html($("#posts").html() + "<div class='post'>" + sensor.id + ":" + details.title + "</div>");
                 }
             }
             $("#loading").hide();
@@ -110,7 +110,7 @@ $(function() {
 
     $("#reload").click(function() {
         getSensorData("world");
-    })
+    });
 });
 
 function selectRegion(val) {

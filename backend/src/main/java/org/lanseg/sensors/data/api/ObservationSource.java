@@ -13,7 +13,7 @@ public interface ObservationSource {
     public long getMaxTime();
     
     public List<Observation> getObservations(long fromTime, long toTime);
-    public void putObservations(List<Observation> data);
-    public void putObservation(Observation data);
+    public void addObservations(List<Observation> data);
+    public void addObservation(Observation data);
     
 }

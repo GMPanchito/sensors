@@ -31,7 +31,7 @@ public class DemoSensorStorage implements SensorDataStorage {
         long start = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
         long end = LocalDateTime.now().plusMonths(4).toEpochSecond(ZoneOffset.UTC);
         for (int i = 0; i < sensorsCount; i++) {
-            Sensor s = new Sensor("Demo sensor " + i);
+            Sensor s = new Sensor("Demo_sensor_" + i);
             SensorDetails details = new SensorDetails(new GeoPoint(
                     bounds.getMinX() + Math.random() * bounds.getWidth(),
                     bounds.getMinY() + Math.random() * bounds.getHeight()
@@ -40,7 +40,7 @@ public class DemoSensorStorage implements SensorDataStorage {
             
             List<Feature> features = new ArrayList<>();
             for (int j = 0; j <= (int) (Math.random() * maxFeatures) + 1; j++) {
-                Feature f = new Feature("Sensor " + i + ", Feature " + j,
+                Feature f = new Feature("Sensor_" + i + "_feature_" + j,
                         ObservationType.values()[(int) (Math.random() * ObservationType.values().length)],
                         new DemoObservationSource((int) (Math.random() * 100) + 1,
                                 start, end, 0, 100));
@@ -67,6 +67,11 @@ public class DemoSensorStorage implements SensorDataStorage {
 
     @Override
     public Sensor getSensor(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for (Sensor s: sensors) {
+            if (s.getId().equals(id)) {
+                return s;
+            }
+        }
+        return null;
     }
 }

@@ -41,9 +41,13 @@ public class DemoObservationSource implements ObservationSource {
     }
 
     @Override
-    public void putObservations(List<Observation> data) {}
+    public void addObservations(List<Observation> data) {
+        observations.addAll(data);
+    }
 
     @Override
-    public void putObservation(Observation data) {}
+    public void addObservation(Observation data) {
+        observations.add(data);
+    }
     
 }

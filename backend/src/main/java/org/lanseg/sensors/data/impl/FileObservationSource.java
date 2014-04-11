@@ -121,7 +121,7 @@ public class FileObservationSource implements ObservationSource {
     }
 
     @Override
-    public void putObservations(List<Observation> data) {
+    public void addObservations(List<Observation> data) {
         try {
             for (Observation record : data) {
                 addRecord(record);
@@ -133,7 +133,7 @@ public class FileObservationSource implements ObservationSource {
     }
 
     @Override
-    public void putObservation(Observation record) {
+    public void addObservation(Observation record) {
         try {
             addRecord(record);
             setMaxTime(maxTime);

@@ -9,14 +9,15 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import org.lanseg.sensors.data.Feature;
 import org.lanseg.sensors.data.Observation;
 import org.lanseg.sensors.data.Sensor;
 import org.lanseg.sensors.data.api.SensorDataStorage;
 import org.lanseg.sensors.data.impl.DemoSensorStorage;
 import org.lanseg.sensors.geo.GeoUtils;
+import org.lanseg.thatpage.utils.ApiDescription;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  *
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class SensorApi {
 
     private static final String JSON = "application/json";
-    
+
     @Autowired
     private final SensorDataStorage sensorStorage = new DemoSensorStorage(12, 3, GeoUtils.WORLD);
 
@@ -47,7 +48,7 @@ public class SensorApi {
                         .append("</td>")
                         .append("<td>");
                 for (int i = 0; i < method.getParameterCount(); i++) {
-                    for (Annotation a: method.getParameterAnnotations()[i]) {
+                    for (Annotation a : method.getParameterAnnotations()[i]) {
                         result.append(a).append("<br/>");
                     }
                 }
@@ -58,22 +59,15 @@ public class SensorApi {
     }
 
     @GET
-    @Path("/data")
-    @Produces(JSON)
-    public List<String> getTweets() {
-        return Collections.EMPTY_LIST;
-    }
-
-    @GET
     @Path("/list")
     @Produces(JSON)
-    public List<Sensor> getAllSensors() {
+    public List<Sensor> getDetails() {
         return sensorStorage.getAllSensors();
     }
 
     @GET
-    @Path("/sensors/{sensorId}/features")
     @Produces(JSON)
+    @Path("/features/{sensorId}")
     public Collection<Feature> getFeatures(@PathParam("sensorId") String sensorId) {
         Sensor sensor = sensorStorage.getSensor(sensorId);
         if (sensor == null) {
@@ -83,12 +77,12 @@ public class SensorApi {
     }
 
     @GET
-    @Path("/sensors/{sensorId}/{featureId}")
+    @Path("/data/{sensorId}/{featureId}")
     @Produces(JSON)
     public List<Observation> getObservations(@PathParam("sensorId") String sensorId,
             @PathParam("featureId") String featureId,
-            @RequestParam("since") long since,
-            @RequestParam("until") long until) {
+            @QueryParam("since") long since,
+            @QueryParam("until") long until) {
         Sensor sensor = sensorStorage.getSensor(sensorId);
         if (sensor == null) {
             return Collections.emptyList();
@@ -101,14 +95,14 @@ public class SensorApi {
     }
 
     @GET
-    @Path("/sensors/{sensorId}/{featureId}/add_observation")
+    @Path("/add_observation/{sensorId}/{featureId}")
     @Produces(JSON)
     public void addData(@PathParam("sensorId") String sensorId,
             @PathParam("featureId") String featureId,
-            @RequestParam("time") long time,
-            @RequestParam("value") double value) {
+            @QueryParam("time") long time,
+            @QueryParam("value") double value) {
         sensorStorage.getSensor(sensorId)
                 .getFeatures().get(featureId).getSource()
-                .putObservation(new Observation(time, value));
+                .addObservation(new Observation(time, value));
     }
 }
