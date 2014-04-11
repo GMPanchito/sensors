@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.lanseg.sensors.data.api.ObservationSource;
 import org.lanseg.sensors.data.api.SensorDataStorage;
 import org.lanseg.sensors.data.impl.DemoSensorStorage;
+import org.lanseg.sensors.geo.GeoUtils;
 import org.lanseg.sensors.utils.Utils;
 
 /**
@@ -39,7 +40,7 @@ public class Main {
         
          (new ObjectMapper()).writeValue(new File("data"), sensorSource);*/
 
-        SensorDataStorage sensors = new DemoSensorStorage(12, 3);
+        SensorDataStorage sensors = new DemoSensorStorage(12, 3, GeoUtils.WORLD);
         sensors.getSensors().forEach((s) -> {
             System.out.println("Sensor " + s);
             s.getFeatures().entrySet().forEach((e) -> {

@@ -11,7 +11,6 @@ import org.lanseg.sensors.data.ObservationType;
 import org.lanseg.sensors.data.Sensor;
 import org.lanseg.sensors.data.SensorDetails;
 import org.lanseg.sensors.geo.GeoPoint;
-import org.lanseg.sensors.data.api.ObservationSource;
 import org.lanseg.sensors.data.api.SensorDataStorage;
 import org.lanseg.sensors.geo.GeoUtils;
 
@@ -24,14 +23,13 @@ public class DemoSensorStorage implements SensorDataStorage {
     private final int sensorsCount;
     private final List<Sensor> sensors;
 
-    public DemoSensorStorage(int count, int maxFeatures) {
+    public DemoSensorStorage(int count, int maxFeatures, Rectangle2D bounds) {
         sensorsCount = count;
         sensors = new ArrayList<>();
         long start = LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
         long end = LocalDateTime.now().plusMonths(4).toEpochSecond(ZoneOffset.UTC);
         for (int i = 0; i < sensorsCount; i++) {
             Sensor s = new Sensor("Demo sensor " + i);
-            Rectangle2D bounds = GeoUtils.SAINT_PETERSBURG;
             SensorDetails details = new SensorDetails(new GeoPoint(
                     bounds.getMinX() + Math.random() * bounds.getWidth(),
                     bounds.getMinY() + Math.random() * bounds.getHeight()

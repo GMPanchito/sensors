@@ -6,7 +6,10 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import org.lanseg.sensors.data.Sensor;
+import org.lanseg.sensors.data.api.ObservationSource;
 import org.lanseg.sensors.data.api.SensorDataStorage;
+import org.lanseg.sensors.data.impl.DemoSensorStorage;
+import org.lanseg.sensors.geo.GeoUtils;
 
 /**
  *
@@ -16,8 +19,11 @@ import org.lanseg.sensors.data.api.SensorDataStorage;
 public class SensorApi {
 
     private static final String JSON = "application/json";
-    private SensorDataStorage sensorStorage;
+    private final SensorDataStorage sensorStorage ;
     
+    public SensorApi (){
+        sensorStorage = new DemoSensorStorage(12, 3, GeoUtils.WORLD);
+    }
     @GET
     @Path("/data")
     @Produces(JSON)
@@ -29,6 +35,6 @@ public class SensorApi {
     @Path("/list")
     @Produces(JSON)
     public List<Sensor> getAllSensors() {
-        return Collections.EMPTY_LIST;
+        return sensorStorage.getSensors();
     }
 }

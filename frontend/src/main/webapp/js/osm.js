@@ -46,7 +46,7 @@ $(function() {
         var a = feature.attributes;
         popup = new OpenLayers.Popup.FramedCloud("chicken",
                 feature.geometry.getBounds().getCenterLonLat(),
-                null, 'information about current sensor: ' +
+                null, 'Fatures:<br/> ' +
                 a.text,
                 null, true, function(evt) {
                     selectControl.unselect(feature);
@@ -75,21 +75,22 @@ function getSensorData(params) {
     }
     pois.removeAllFeatures();
     $.ajax({
-        url: "/rest/sensors/data" /*+ params*/,
+        url: "/rest/sensors/list" /*+ params*/,
         success: function(data) {
             alert(JSON.stringify(data));
             var counter = 0;
             for (var i = 0; i < data.length; i++) {
-                var point = data[i];
+                var sensor = data[i];
+                var point = sensor.details.location;
                 var lonlat = new OpenLayers.LonLat(point.lon, point.lat).transform(fromProjection, toProjection);
                 pt = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(lonlat.lon, lonlat.lat));
-                pt.attributes["text"] = point.text;
-                pt.attributes["id"] = point.id;
+                pt.attributes["text"] = getFeatureNames(sensor.features);
+                pt.attributes["id"] = sensor.id;
                 pt.attributes["author"] = point.author;
                 pt.attributes["authorName"] = point.authorName;
                 pois.addFeatures([pt]);
                 if (counter++ < 100) {
-                    $("#posts").html($("#posts").html() + "<div class='post'>" + point.text + "</div>");
+                    $("#posts").html($("#posts").html() + "<div class='post'>" + sensor.id + ":" + sensor.details.title + "</div>");
                 }
             }
             $("#loading").hide();
