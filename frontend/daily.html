@@ -1,0 +1,96 @@
+<html>
+  <head>
+    <!--Load the AJAX API-->
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+
+      // Load the Visualization API and the piechart package.
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart);
+
+      // Callback that creates and populates a data table,
+      // instantiates the pie chart, passes in the data and
+      // draws it.
+	  function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Time', 'Rural Area', 'City Center', 'City Park'],
+          ['00', 5, 7, 6],
+          ['01', 4,	6, 5],
+          ['02',  4, 6, 5],
+          ['03',  5, 7, 6],
+          ['04',  4, 7, 6],
+          ['05',  4, 6, 5],
+          ['06',  3, 5, 5],
+          ['07',  3, 5, 4],
+          ['08',  5, 5, 4],
+          ['09',  4, 6, 5],
+          ['10',  4, 6, 3],
+          ['11',  4, 6, 5],
+          ['12',  4, 6, 5],
+          ['13', 5, 6, 5],
+          ['14', 5,	6, 4],
+          ['15',  4, 6, 5],
+          ['16',  5, 7, 4],
+          ['17',  6, 8, 7],
+          ['18',  8, 8, 7],
+          ['19',  5, 7, 6]
+        ]);
+
+        var options = {
+          title: 'Temperature (C)',
+          hAxis: {title: 'Time'},
+          colors: ['00FF00', 'FF0000', '0000FF'],
+          curveType: "function"
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('temp_graph'));
+        chart.draw(data, options);
+        
+        var data = google.visualization.arrayToDataTable([
+          ['Time', 'Rural Area', 'City Center', 'City Park'],
+          ['00', 46, 37, 26],
+          ['01', 49,	39, 25],
+          ['02',  50, 39, 29],
+          ['03',  53, 43, 32],
+          ['04',  51, 43, 32],
+          ['05',  56, 46, 32],
+          ['06',  57, 53, 43],
+          ['07',  53, 57, 47],
+          ['08',  53, 57, 48],
+          ['09',  69, 57, 49],
+          ['10',  71, 61, 51],
+          ['11',  76, 66, 64],
+          ['12',  84, 76, 78],
+          ['13', 89, 81, 73],
+          ['14', 91,	81, 71],
+          ['15',  86, 76, 64],
+          ['16',  87, 76, 66],
+          ['17',  86, 76, 68],
+          ['18',  86, 76, 66],
+          ['19',  90, 81, 70]
+        ]);
+
+        var options = {
+          title: 'Humidity (%)',
+          hAxis: {title: 'Time'},
+          colors: ['00FF00', 'FF0000', '0000FF'],
+          curveType: "function"
+        };
+
+        var chart = new google.visualization.LineChart(document.getElementById('hum_graph'));
+        chart.draw(data, options);
+      }
+      
+    </script>
+  </head>
+
+  <body>
+  	<center> <h1 text-align: center> Daily Humidity and Temperature Graphs </h1> </center>
+  	<center> <h2> (last 24 hours) </h2> </center>
+  	<!--Div that will hold the pie chart-->
+    <div id="temp_graph" style="width: 900px; height: 300px;"></div>
+    <div id="hum_graph" style="width: 900px; height: 300px;"></div>
+  </body>
+</html>
