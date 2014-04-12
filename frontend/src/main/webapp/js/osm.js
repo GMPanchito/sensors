@@ -46,7 +46,7 @@ $(function() {
         var a = feature.attributes;
         popup = new OpenLayers.Popup.FramedCloud("chicken",
                 feature.geometry.getBounds().getCenterLonLat(),
-                null, 'Fatures:<br/> ' +
+                null,
                 a.text,
                 null, true, function(evt) {
                     selectControl.unselect(feature);
@@ -84,7 +84,9 @@ function getSensorData(params) {
                 var point = details.location;
                 var lonlat = new OpenLayers.LonLat(point.lon, point.lat).transform(fromProjection, toProjection);
                 pt = new OpenLayers.Feature.Vector(new OpenLayers.Geometry.Point(lonlat.lon, lonlat.lat));
-                pt.attributes["text"] = details.title + "<br/>" + details.description;
+                pt.attributes["text"] = "<b>" + details.title + "</b> " +
+                        details.description + "<br />" +
+                        getFeatureNames(sensor.features);
                 pt.attributes["id"] = sensor.id;
                 pt.attributes["author"] = point.author;
                 pt.attributes["authorName"] = point.authorName;

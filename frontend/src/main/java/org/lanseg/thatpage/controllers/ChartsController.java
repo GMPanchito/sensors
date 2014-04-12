@@ -1,5 +1,7 @@
 package org.lanseg.thatpage.controllers;
 
+import org.lanseg.sensors.data.api.SensorDataStorage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -8,15 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
  *
  * @author lans
  */
-
 @Controller
-@RequestMapping("/admin")
-public class SensorAdminController {
-   
+@RequestMapping("/charts")
+public class ChartsController {
+
+    @Autowired
+    private SensorDataStorage sensorStorage;
+
     @RequestMapping()
-    public String test(Model model) {
-        System.out.println("InAdmin!");
-        model.addAttribute("preved", "medved");
-        return "admin";
+    public String main(Model model) {
+        model.addAttribute("sensors", sensorStorage.getAllSensors());
+        return "charts";
     }
 }

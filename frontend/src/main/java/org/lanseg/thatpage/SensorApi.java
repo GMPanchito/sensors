@@ -19,9 +19,7 @@ import org.lanseg.sensors.data.Observation;
 import org.lanseg.sensors.data.ObservationType;
 import org.lanseg.sensors.data.Sensor;
 import org.lanseg.sensors.data.api.SensorDataStorage;
-import org.lanseg.sensors.data.impl.DemoSensorStorage;
 import org.lanseg.sensors.data.impl.FileObservationSource;
-import org.lanseg.sensors.geo.GeoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -35,7 +33,7 @@ public class SensorApi {
     private static final String JSON = "application/json";
 
     @Autowired
-    private final SensorDataStorage sensorStorage = new DemoSensorStorage(12, 3, GeoUtils.WORLD);
+    private SensorDataStorage sensorStorage;
 
     public SensorApi() {
     }
