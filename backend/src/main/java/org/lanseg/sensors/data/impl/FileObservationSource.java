@@ -106,7 +106,7 @@ public class FileObservationSource implements ObservationSource {
                 }
             }
         } catch (IOException ex) {
-            LOG.log(Level.SEVERE, "Error reading data: {0}", ex);
+            LOG.log(Level.SEVERE, "Error reading data: {1}", ex);
         }
 
         return result;
@@ -128,7 +128,7 @@ public class FileObservationSource implements ObservationSource {
             }
             setMaxTime(maxTime);
         } catch (IOException ex) {
-            LOG.log(Level.SEVERE, "Error writing data: {0}", ex);
+            LOG.log(Level.SEVERE, "Error writing data: {1}", ex);
         }
     }
 
@@ -138,7 +138,7 @@ public class FileObservationSource implements ObservationSource {
             addRecord(record);
             setMaxTime(maxTime);
         } catch (IOException ex) {
-            LOG.log(Level.SEVERE, "Error writing data: {0}", ex);
+            LOG.log(Level.SEVERE, "Error writing data: {1}", ex);
         }
     }
 
@@ -147,8 +147,9 @@ public class FileObservationSource implements ObservationSource {
     }
 
     private void addRecord(Observation record) throws IOException {
-        LOG.log(Level.INFO, "Added observation: {0}", record);
         long pos = getLocation(record.getTime());
+        LOG.log(Level.INFO, "Adding observation: {1} at {2}", 
+                new Object[] {record, pos});
         file.seek(pos);
         file.writeFloat(Double.valueOf(record.getValue()).floatValue());
         if (record.getTime() > maxTime) {
@@ -160,7 +161,7 @@ public class FileObservationSource implements ObservationSource {
         try {
             file.close();
         } catch (IOException ex) {
-            LOG.log(Level.SEVERE, "Error closing data file: {0}", ex);
+            LOG.log(Level.SEVERE, "Error closing data file: {1}", ex);
         }
     }
 }

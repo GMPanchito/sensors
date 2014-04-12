@@ -39,7 +39,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-webmvc</artifactId>
             <version>4.0.2.RELEASE</version>
-            <scope>compile</scope>
         </dependency>        
         <dependency>
             <groupId>junit</groupId>

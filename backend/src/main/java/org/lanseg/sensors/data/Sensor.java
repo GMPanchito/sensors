@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 /**
  *
  * @author lans
@@ -12,7 +13,7 @@ public class Sensor {
 
     private String id;
     private SensorDetails details;
-    
+
     private final Map<String, Feature> features = new HashMap<>();
 
     public Sensor() {
@@ -34,6 +35,10 @@ public class Sensor {
         return Collections.unmodifiableMap(features);
     }
 
+    public void addFeature(Feature f) {
+        features.put(f.getId(), f);
+    }
+
     public void setFeatures(List<Feature> features) {
         this.features.clear();
         features.stream().forEach((f) -> {
@@ -52,7 +57,7 @@ public class Sensor {
     public void setDetails(SensorDetails details) {
         this.details = details;
     }
-    
+
     @Override
     public String toString() {
         return String.format("Sensor {id: %s, features: %d, details: %s} ", id, features.size(), details);
